@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SIMULADOR_DE_AUTOMÓVIL
+namespace AUTOMOVIL
 {
     internal class Automovil
     {
@@ -13,8 +13,15 @@ namespace SIMULADOR_DE_AUTOMÓVIL
         private int _velocidadActual;
         private bool _cajaAutomatica;
         private bool _modoCrucero;
+        public Automovil(string marca, bool cajaAutomatica)
+        {
+            _marca = marca;
+            _cajaAutomatica = cajaAutomatica;
+            _motorEncendido = false;
+            _velocidadActual = 0;
+            _modoCrucero = false;
+        }
 
-        // PROPIEDADES (GET Y SET)
         public string Marca
         {
             get { return _marca; }
@@ -44,6 +51,116 @@ namespace SIMULADOR_DE_AUTOMÓVIL
             get { return _modoCrucero; }
             set { _modoCrucero = value; }
         }
+        // PROPIEDAD SOLO LECTURA
+        public string Identificador
+        {
+            get
+            {
+                string tipoCaja;
 
+                if (_cajaAutomatica)
+                {
+                    tipoCaja = "AUTO";
+                }
+                else
+                {
+                    tipoCaja = "MAN";
+                }
+
+                return _marca.Substring(0, 3).ToUpper() + "-" + tipoCaja + "-2026";
+            }
+        }
+
+        // MÉTODO ENCENDER/APAGAR
+        public void EncenderApagar()
+        {
+            _motorEncendido = !_motorEncendido;
+
+            if (_motorEncendido == false)
+            {
+                _velocidadActual = 0;
+                _modoCrucero = false;
+            }
+        }
+
+        // ACELERAR 
+        public void Acelerar()
+        {
+            Acelerar(10);
+        }
+
+        // ACELERAR
+        public void Acelerar(int aumento)
+        {
+            if (_motorEncendido == false)
+            {
+                Console.WriteLine("El motor está apagado.");
+                return;
+            }
+
+            _velocidadActual += aumento;
+
+            if (_cajaAutomatica)
+            {
+                if (_velocidadActual > 220)
+                {
+                    _velocidadActual = 220;
+                }
+            }
+            else
+            {
+                if (_velocidadActual > 180)
+                {
+                    _velocidadActual = 180;
+                }
+            }
+        }
+
+        // FRENAR 
+        public void Frenar()
+        {
+            if (_motorEncendido == false)
+            {
+                Console.WriteLine("El motor está apagado.");
+                return;
+            }
+
+            _velocidadActual = 0;
+            _modoCrucero = false;
+        }
+
+        // FRENAR 
+        public void Frenar(int disminucion)
+        {
+            if (_motorEncendido == false)
+            {
+                Console.WriteLine("El motor está apagado.");
+                return;
+            }
+
+            _velocidadActual -= disminucion;
+
+            if (_velocidadActual < 0)
+            {
+                _velocidadActual = 0;
+            }
+
+            _modoCrucero = false;
+        }
+
+        // ACTIVAR/DESACTIVAR MODO CRUCERO
+        public void ActivarModoCrucero()
+        {
+            if (_velocidadActual > 60)
+            {
+                _modoCrucero = true;
+            }
+            else
+            {
+                Console.WriteLine("Debe superar los 60 km/h.");
+            }
+        }
     }
 }
+
+    
